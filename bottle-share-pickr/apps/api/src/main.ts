@@ -5,11 +5,13 @@
 
 import { NestFactory } from '@nestjs/core';
 
+import { API_URL } from '@bottle-share-pickr/api-interface';
+
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
+  const globalPrefix = API_URL;
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.port || 3333;
   await app.listen(port, () => {

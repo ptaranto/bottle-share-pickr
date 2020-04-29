@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
+
+import { API_URL, DefaultResponse } from '@bottle-share-pickr/api-interface';
 
 import { ReactComponent as Logo } from './logo.svg';
 import star from './star.svg';
@@ -141,6 +143,11 @@ const StyledApp = styled.div`
 `;
 
 export const App = () => {
+  const [defaultResponse, setDefaultResponse] = useState<DefaultResponse>({ message: 'Loading...'});
+  useEffect(() => {
+    fetch(API_URL).then(r => r.json()).then(setDefaultResponse)
+  }, []);
+
   /*
    * Replace the elements below with your own.
    *
@@ -151,6 +158,7 @@ export const App = () => {
       <header className="flex">
         <Logo width="75" height="75" />
         <h1>Welcome to web!</h1>
+        <h1>{defaultResponse.message}</h1>
       </header>
       <main>
         <h2>Resources &amp; Tools</h2>
