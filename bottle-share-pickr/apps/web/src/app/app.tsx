@@ -7,7 +7,7 @@ import { API_URL, DefaultResponse } from '@bottle-share-pickr/api-interface';
 import { ReactComponent as Logo } from './logo.svg';
 import star from './star.svg';
 
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, useLocation } from 'react-router-dom';
 
 const StyledApp = styled.div`
   font-family: sans-serif;
@@ -29,11 +29,19 @@ const StyledApp = styled.div`
   }
 `;
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
+
 export const App = () => {
+  let query = useQuery();
   const [defaultResponse, setDefaultResponse] = useState<DefaultResponse>({ message: 'Loading...'});
   useEffect(() => {
     fetch(API_URL).then(r => r.json()).then(setDefaultResponse)
   }, []);
+
+
 
   /*
    * Replace the elements below with your own.
@@ -46,6 +54,9 @@ export const App = () => {
         <h1>Welcome to web!</h1>
         <h1>{defaultResponse.message}</h1>
       </header>
+      <hr />
+        <p>Not logged into Unttapd.</p>
+        <p>authentication code provided by Untappd: {query.get('code')}</p>
       <hr />
       <div role="navigation">
         <ul>
