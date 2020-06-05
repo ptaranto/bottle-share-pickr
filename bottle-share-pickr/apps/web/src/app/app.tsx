@@ -1,5 +1,4 @@
-import { API_URL, DefaultResponse } from '@bottle-share-pickr/api-interface';
-import { Link, Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch, useLocation } from 'react-router-dom';
 
 import React from 'react';
 import styled from '@emotion/styled';
@@ -26,15 +25,11 @@ export const App = () => {
     </StyledApp>
   );
 };
-const REDIRECT_URL = 'http://localhost:4200/auth';
-const UNTAPPD_CLIENT_ID = 'PUT_YOUR_UNTAPPD_CLIENT_ID';
-const UNTAPPD_AUTHENTICATE_URL = `https://untappd.com/oauth/authenticate/?client_id=${UNTAPPD_CLIENT_ID}&response_type=code&redirect_url=${REDIRECT_URL}`;
+
 function LandingPage() {
   return (
     <>
-      <button>
-        <a href={UNTAPPD_AUTHENTICATE_URL}>Connect to your Untappd account</a>
-      </button>
+      <a href="/api/redirectToUntappdAuth">Connect to your Untappd account</a>
     </>
   );
 }

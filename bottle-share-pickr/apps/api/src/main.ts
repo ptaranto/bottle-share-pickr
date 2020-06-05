@@ -3,11 +3,9 @@
  * This is only a minimal backend to get started.
  */
 
-import { NestFactory } from '@nestjs/core';
-
 import { API_URL } from '@bottle-share-pickr/api-interface';
-
 import { AppModule } from './app/app.module';
+import { NestFactory } from '@nestjs/core';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
