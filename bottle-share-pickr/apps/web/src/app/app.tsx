@@ -1,6 +1,8 @@
 import { Link, Route, Switch, useLocation } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { UNTAPPD_ROOT_URL, USER_INFO } from '@bottle-share-pickr/api-interface';
 
-import React from 'react';
+import axios from 'axios';
 import styled from '@emotion/styled';
 
 const StyledApp = styled.div``;
@@ -59,7 +61,10 @@ function HomePage() {
   return (
     <>
       {accessToken ? (
-        <>ACCESS_TOKEN: {accessToken}</>
+        <>
+          <div>ACCESS_TOKEN: {accessToken}</div>
+          <UserInfo accessToken={accessToken} />
+        </>
       ) : (
         <>
           <div>NO TOKEN PROVIDED</div>
@@ -69,5 +74,29 @@ function HomePage() {
     </>
   );
 }
+
+const UserInfo = props => {
+  const { accessToken } = props;
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const response = await axios.get(
+        `${UNTAPPD_ROOT_URL}${USER_INFO}?access_token=${accessToken}&compact=true`
+      );
+
+      setUserInfo(response.data.response.user);
+    };
+
+    getUserInfo();
+  }, []);
+
+  return (
+    <div>
+      <img src={userInfo.user_avatar} />
+      {`${userInfo.first_name} ${userInfo.last_name} (${userInfo.user_name})`}
+    </div>
+  );
+};
 
 export default App;
