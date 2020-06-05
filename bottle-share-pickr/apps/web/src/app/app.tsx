@@ -1,95 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import { API_URL, DefaultResponse } from '@bottle-share-pickr/api-interface';
+import { Link, Route, Switch, useLocation } from 'react-router-dom';
 
+import React from 'react';
 import styled from '@emotion/styled';
 
-import { API_URL, DefaultResponse } from '@bottle-share-pickr/api-interface';
-
-import { ReactComponent as Logo } from './logo.svg';
-import star from './star.svg';
-
-import { Route, Link, useLocation } from 'react-router-dom';
-
-const StyledApp = styled.div`
-  font-family: sans-serif;
-  min-width: 300px;
-  max-width: 600px;
-  margin: 50px auto;
-
-  .flex {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  header {
-    background-color: #143055;
-    color: white;
-    padding: 5px;
-    border-radius: 3px;
-  }
-`;
+const StyledApp = styled.div``;
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-
 export const App = () => {
-  let query = useQuery();
-  const [defaultResponse, setDefaultResponse] = useState<DefaultResponse>({ message: 'Loading...'});
-  useEffect(() => {
-    fetch(API_URL).then(r => r.json()).then(setDefaultResponse)
-  }, []);
-
-
-
-  /*
-   * Replace the elements below with your own.
-   *
-   * Note: The corresponding styles are in the ./app.@emotion/styled file.
-   */
   return (
     <StyledApp>
-      <header className="flex">
-        <h1>Welcome to web!</h1>
-        <h1>{defaultResponse.message}</h1>
-      </header>
-      <hr />
-        <p>Not logged into Unttapd.</p>
-        <p>authentication code provided by Untappd: {query.get('code')}</p>
-      <hr />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
-      </div>
-      <Route
-        path="/"
-        exact
-        render={() => (
-          <div>
-            This is the generated root route.{' '}
-            <Link to="/page-2">Click here for page 2.</Link>
-          </div>
-        )}
-      />
-      <Route
-        path="/page-2"
-        exact
-        render={() => (
-          <div>
-            <Link to="/">Click here to go back to root page.</Link>
-          </div>
-        )}
-      />
-      {/* END: routes */}
+      <h1>Bottle-share Pickr App</h1>
+
+      <Switch>
+        <Route path="/auth">
+          <AuthPage />
+        </Route>
+        <Route path="/">
+          <LandingPage />
+        </Route>
+      </Switch>
     </StyledApp>
   );
 };
+const REDIRECT_URL = 'http://localhost:4200/auth';
+const UNTAPPD_CLIENT_ID = 'PUT_YOUR_UNTAPPD_CLIENT_ID';
+const UNTAPPD_AUTHENTICATE_URL = `https://untappd.com/oauth/authenticate/?client_id=${UNTAPPD_CLIENT_ID}&response_type=code&redirect_url=${REDIRECT_URL}`;
+function LandingPage() {
+  return (
+    <>
+      <button>
+        <a href={UNTAPPD_AUTHENTICATE_URL}>Connect to your Untappd account</a>
+      </button>
+    </>
+  );
+}
+
+function AuthPage() {
+  let query = useQuery();
+  const untappdQueryStringCode = query.get('code');
+
+  return (
+    <>
+      <h1>Authentication page</h1>
+      <p>
+        authentication code provided by Untappd:{' '}
+        <strong>{untappdQueryStringCode}</strong>
+      </p>
+    </>
+  );
+}
 
 export default App;

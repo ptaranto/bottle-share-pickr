@@ -1,9 +1,7 @@
+import App from './app';
+import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import { render } from '@testing-library/react';
-
-import { BrowserRouter } from 'react-router-dom';
-
-import App from './app';
 
 describe('App', () => {
   it('should render successfully', () => {
@@ -16,13 +14,13 @@ describe('App', () => {
     expect(baseElement).toBeTruthy();
   });
 
-  it('should have a greeting as the title', () => {
+  it('should have a connect to your Untappd account button', () => {
     const { getByText } = render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
     );
 
-    expect(getByText('Welcome to web!')).toBeTruthy();
+    expect(getByText('Connect to your Untappd account')).toBeTruthy();
   });
 });
