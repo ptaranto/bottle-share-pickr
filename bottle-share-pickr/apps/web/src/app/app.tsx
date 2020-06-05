@@ -1,4 +1,4 @@
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Link, Route, Switch, useLocation } from 'react-router-dom';
 
 import React from 'react';
 import styled from '@emotion/styled';
@@ -17,6 +17,9 @@ export const App = () => {
       <Switch>
         <Route path="/auth">
           <AuthPage />
+        </Route>
+        <Route path="/home">
+          <HomePage />
         </Route>
         <Route path="/">
           <LandingPage />
@@ -45,6 +48,24 @@ function AuthPage() {
         authentication code provided by Untappd:{' '}
         <strong>{untappdQueryStringCode}</strong>
       </p>
+    </>
+  );
+}
+
+function HomePage() {
+  let query = useQuery();
+  const accessToken = query.get('access_token');
+
+  return (
+    <>
+      {accessToken ? (
+        <>ACCESS_TOKEN: {accessToken}</>
+      ) : (
+        <>
+          <div>NO TOKEN PROVIDED</div>
+          <Link to="/">Go back to Landing page</Link>
+        </>
+      )}
     </>
   );
 }

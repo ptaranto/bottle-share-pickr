@@ -37,7 +37,6 @@ export class AppController {
     );
     const url = `https://untappd.com/oauth/authorize/?client_id=${untappdClientId}&client_secret=${untappdClientSecret}&response_type=code&redirect_url=${redirectUrl}&code=${code}`;
     const tokenResponse: any = await axios.get(url);
-    console.log(tokenResponse.data);
 
     const token = tokenResponse.data.response.access_token;
     return { url: `${env.appAuth}?access_token=${token}` };
