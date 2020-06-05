@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  untappdRedirectUrl: 'http://localhost:4200/auth'
+  appAuth: 'http://localhost:4200/home',
+  untappdRedirectUrl: 'http://localhost:3333/api/retrieveUntappdToken'
 };
