@@ -12,6 +12,21 @@ export const USER_FRIENDS = 'user/friends';
 export const BEER_INFO = 'beer/info';
 export const SEARCH_BEER = 'search/beer';
 
+export const untappdEndpoint = (
+  endpoint: string,
+  options: {
+    client_id?: string;
+    client_secret?: string;
+    access_token?: string;
+    compact?: boolean;
+  }
+) => {
+  const params = Object.entries(options)
+    .map(entry => entry.join('='))
+    .join('&');
+  return `${UNTAPPD_ROOT_URL}${endpoint}?${params}`;
+};
+
 export interface DefaultResponse {
   message: string;
 }

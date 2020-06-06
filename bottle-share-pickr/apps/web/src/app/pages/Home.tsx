@@ -1,9 +1,9 @@
 import { Friend, User } from '@bottle-share-pickr/api-interface';
 import React, { useEffect, useState } from 'react';
 import {
-  UNTAPPD_ROOT_URL,
   USER_FRIENDS,
-  USER_INFO
+  USER_INFO,
+  untappdEndpoint
 } from '@bottle-share-pickr/api-interface';
 
 import { Link } from 'react-router-dom';
@@ -12,15 +12,14 @@ import styled from '@emotion/styled';
 import useQuery from '../hooks/useQuery';
 
 const Home = () => {
-  let query = useQuery();
-  const accessToken = query.get('access_token');
-
+  const requestOptions = { access_token: useQuery().get('access_token') };
   const [userInfo, setUserInfo] = useState<User>(null);
+  const [friendsList, setFriendsList] = useState<Friend[]>([]);
 
   useEffect(() => {
     const getUserInfo = async () => {
       const response = await axios.get(
-        `${UNTAPPD_ROOT_URL}${USER_INFO}?access_token=${accessToken}&compact=true`
+        untappdEndpoint(USER_INFO, requestOptions)
       );
 
       setUserInfo(response.data.response.user);
@@ -29,12 +28,10 @@ const Home = () => {
     getUserInfo();
   }, []);
 
-  const [friendsList, setFriendsList] = useState<Friend[]>([]);
-
   useEffect(() => {
     const getFriendsList = async () => {
       const response = await axios.get(
-        `${UNTAPPD_ROOT_URL}${USER_FRIENDS}?access_token=${accessToken}&compact=true`
+        untappdEndpoint(USER_FRIENDS, requestOptions)
       );
 
       setFriendsList(response.data.response.items);
@@ -44,9 +41,9 @@ const Home = () => {
 
   return (
     <>
-      {accessToken ? (
+      {requestOptions.access_token ? (
         <>
-          <div>ACCESS_TOKEN: {accessToken}</div>
+          <div>ACCESS_TOKEN: {requestOptions.access_token}</div>
           <div>Your profile:</div>
           <UserInfo data={userInfo} />
           <div>Friends list:</div>
