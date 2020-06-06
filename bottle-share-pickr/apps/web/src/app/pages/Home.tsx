@@ -65,34 +65,45 @@ const Home = () => {
 const UserInfo = props => {
   const { data } = props;
 
-  return data ? (
-    <div>
-      <Avatar src={data.user_avatar} />
-      {`${data.first_name} ${data.last_name}
-      (${data.user_name})`}
-    </div>
-  ) : null;
+  return data ? <UserProfile data={data} /> : null;
 };
 
 const FriendsList = props => {
   const { data } = props;
 
   return (
-    <>
+    <FriendsListContainer>
       {data &&
         data.map((friend, i: number) => (
-          <div key={`friend_${i}`}>
-            <Avatar src={friend.user.user_avatar} />
-            {`${friend.user.first_name} ${friend.user.last_name}(${friend.user.user_name})`}
-          </div>
+          <UserProfile key={`friend_${i}`} data={friend.user} />
         ))}
-    </>
+    </FriendsListContainer>
   );
 };
 
+const UserProfile = props => {
+  const { data } = props;
+  return (
+    <UserProfileContainer>
+      <Avatar src={data.user_avatar} />
+      <div>{`${data.first_name} ${data.last_name}`}</div>
+      <div>{`(${data.user_name})`}</div>
+    </UserProfileContainer>
+  );
+};
+
+const FriendsListContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+const UserProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 const Avatar = styled.img`
-  width: auto;
-  height: 50px;
+  width: 50px;
+  height: auto;
 `;
 
 export default Home;
