@@ -7,33 +7,14 @@ import {
 
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import styled from '@emotion/styled';
 import useQuery from '../hooks/useQuery';
 
 const Home = () => {
   let query = useQuery();
   const accessToken = query.get('access_token');
 
-  return (
-    <>
-      {accessToken ? (
-        <>
-          <div>ACCESS_TOKEN: {accessToken}</div>
-          <UserInfo accessToken={accessToken} />
-          <FriendsList accessToken={accessToken} />
-        </>
-      ) : (
-        <>
-          <div>NO TOKEN PROVIDED</div>
-          <Link to="/">Go back to Landing page</Link>
-        </>
-      )}
-    </>
-  );
-};
-
-const UserInfo = props => {
-  const { accessToken } = props;
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -47,16 +28,6 @@ const UserInfo = props => {
     getUserInfo();
   }, []);
 
-  return (
-    <div>
-      <img src={userInfo.user_avatar} />
-      {`${userInfo.first_name} ${userInfo.last_name} (${userInfo.user_name})`}
-    </div>
-  );
-};
-
-const FriendsList = props => {
-  const { accessToken } = props;
   const [friendsList, setFriendsList] = useState([]);
 
   useEffect(() => {
@@ -69,16 +40,58 @@ const FriendsList = props => {
     };
     getFriendsList();
   }, []);
+
   return (
     <>
-      {friendsList.map((friend, i) => (
-        <div key={`friend_${i}`}>
-          <img src={friend.user.user_avatar} />
-          {`${friend.user.first_name} ${friend.user.last_name} (${friend.user.user_name})`}
-        </div>
-      ))}
+      {accessToken ? (
+        <>
+          <div>ACCESS_TOKEN: {accessToken}</div>
+          <div>Your profile:</div>
+          <UserInfo data={userInfo} />
+          <div>Friends list:</div>
+          <FriendsList data={friendsList} />
+        </>
+      ) : (
+        <>
+          <div>NO TOKEN PROVIDED</div>
+          <Link to="/">Go back to Landing page</Link>
+        </>
+      )}
     </>
   );
 };
+
+const UserInfo = props => {
+  const { data } = props;
+
+  return data ? (
+    <div>
+      <Avatar src={data.user_avatar} />
+      {`${data.first_name} ${data.last_name}
+      (${data.user_name})`}
+    </div>
+  ) : null;
+};
+
+const FriendsList = props => {
+  const { data } = props;
+
+  return (
+    <>
+      {data &&
+        data.map((friend, i: number) => (
+          <div key={`friend_${i}`}>
+            <Avatar src={friend.user.user_avatar} />
+            {`${friend.user.first_name} ${friend.user.last_name}(${friend.user.user_name})`}
+          </div>
+        ))}
+    </>
+  );
+};
+
+const Avatar = styled.img`
+  width: auto;
+  height: 50px;
+`;
 
 export default Home;
