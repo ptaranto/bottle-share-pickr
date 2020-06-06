@@ -1,3 +1,4 @@
+import { Friend, User } from '@bottle-share-pickr/api-interface';
 import React, { useEffect, useState } from 'react';
 import {
   UNTAPPD_ROOT_URL,
@@ -14,7 +15,7 @@ const Home = () => {
   let query = useQuery();
   const accessToken = query.get('access_token');
 
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState<User>(null);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -28,7 +29,7 @@ const Home = () => {
     getUserInfo();
   }, []);
 
-  const [friendsList, setFriendsList] = useState([]);
+  const [friendsList, setFriendsList] = useState<Friend[]>([]);
 
   useEffect(() => {
     const getFriendsList = async () => {

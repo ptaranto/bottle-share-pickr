@@ -15,3 +15,27 @@ export const SEARCH_BEER = 'search/beer';
 export interface DefaultResponse {
   message: string;
 }
+
+export interface User {
+  first_name: string;
+  last_name: string;
+  location: string;
+  is_supporter: boolean;
+  stats?: UserStats;
+  uid: number;
+  user_name: string;
+  user_avatar: string;
+}
+
+export interface UserStats {
+  total_badges: number;
+  total_beers: number; // unique beer ticks
+  total_checkins: number; // total beer ticks
+  total_created_beers: number;
+  total_friends: number;
+}
+
+export interface Friend {
+  friendship_hash: string;
+  user: User;
+}
