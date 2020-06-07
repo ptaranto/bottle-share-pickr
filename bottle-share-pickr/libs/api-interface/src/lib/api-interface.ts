@@ -5,6 +5,8 @@ export const UNTAPPD_AUTHENTICATE_URL =
 export const UNTAPPD_AUTHORIZE_URL = 'https://untappd.com/oauth/authorize/';
 export const UNTAPPD_ROOT_URL = 'https://api.untappd.com/v4/';
 
+export const UNTAPPD_DEFAULT_PAGINATION = 25;
+
 // Untappd endpoints
 export const USER_INFO = 'user/info';
 export const USER_WISHLIST = 'user/wishlist';
@@ -19,6 +21,7 @@ export const untappdEndpoint = (
     client_secret?: string;
     access_token?: string;
     compact?: boolean;
+    offset?: number;
   }
 ) => {
   const params = Object.entries(options)

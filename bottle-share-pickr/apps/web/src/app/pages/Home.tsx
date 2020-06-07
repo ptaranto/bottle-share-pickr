@@ -1,6 +1,7 @@
 import { Friend, User } from '@bottle-share-pickr/api-interface';
 import React, { useEffect, useState } from 'react';
 import {
+  UNTAPPD_DEFAULT_PAGINATION,
   USER_FRIENDS,
   USER_INFO,
   untappdEndpoint
@@ -22,22 +23,34 @@ const Home = () => {
         untappdEndpoint(USER_INFO, requestOptions)
       );
 
-      setUserInfo(response.data.response.user);
+      const user = response.data.response.user;
+      setUserInfo(user);
     };
 
     getUserInfo();
   }, []);
 
   useEffect(() => {
-    const getFriendsList = async () => {
-      const response = await axios.get(
-        untappdEndpoint(USER_FRIENDS, requestOptions)
-      );
+    if (!userInfo) return;
 
-      setFriendsList(response.data.response.items);
-    };
-    getFriendsList();
-  }, []);
+    const numFriendsPage = Math.ceil(
+      userInfo.stats.total_friends / UNTAPPD_DEFAULT_PAGINATION
+    );
+    const pages = Array(numFriendsPage).fill(1);
+
+    const getFriendsList = (offset: number) =>
+      axios.get(untappdEndpoint(USER_FRIENDS, { ...requestOptions, offset }));
+
+    Promise.all(
+      pages.map((page, i) => getFriendsList(i * UNTAPPD_DEFAULT_PAGINATION))
+    ).then(responses => {
+      const friends = responses.reduce(
+        (acc, cur) => [...acc, ...cur.data.response.items],
+        []
+      );
+      setFriendsList(friends);
+    });
+  }, [userInfo]);
 
   return (
     <>
@@ -71,7 +84,7 @@ const FriendsList = props => {
   return (
     <FriendsListContainer>
       {data &&
-        data.map((friend, i: number) => (
+        data.map((friend: Friend, i: number) => (
           <UserProfile key={`friend_${i}`} data={friend.user} />
         ))}
     </FriendsListContainer>
@@ -97,6 +110,7 @@ const UserProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 5px;
 `;
 const Avatar = styled.img`
   width: 50px;
