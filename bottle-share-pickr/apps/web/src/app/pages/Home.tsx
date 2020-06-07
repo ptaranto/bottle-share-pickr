@@ -48,6 +48,14 @@ const Home = () => {
         (acc, cur) => [...acc, ...cur.data.response.items],
         []
       );
+      friends.sort((friend1: Friend, friend2: Friend) => {
+        var nameA = friend1.user.first_name.toUpperCase();
+        var nameB = friend2.user.first_name.toUpperCase();
+
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      });
       setFriendsList(friends);
     });
   }, [userInfo]);
