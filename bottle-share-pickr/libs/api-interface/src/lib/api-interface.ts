@@ -25,7 +25,7 @@ export const untappdEndpoint = (
   }
 ) => {
   const params = Object.entries(options)
-    .map(entry => entry.join('='))
+    .map((entry) => entry.join('='))
     .join('&');
   return `${UNTAPPD_ROOT_URL}${endpoint}?${params}`;
 };

@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { environment as env } from '../environments/environment';
 import {
   UNTAPPD_AUTHENTICATE_URL,
-  UNTAPPD_AUTHORIZE_URL
+  UNTAPPD_AUTHORIZE_URL,
 } from '@bottle-share-pickr/api-interface';
 
 @Controller()
@@ -27,7 +27,7 @@ export class AppController {
     const untappdClientId = this.configService.get<string>('UNTAPPD_CLIENT_ID');
     const redirectUrl = env.untappdRedirectUrl;
     return {
-      url: `${UNTAPPD_AUTHENTICATE_URL}?client_id=${untappdClientId}&response_type=code&redirect_url=${redirectUrl}`
+      url: `${UNTAPPD_AUTHENTICATE_URL}?client_id=${untappdClientId}&response_type=code&redirect_url=${redirectUrl}`,
     };
   }
 

@@ -4,7 +4,7 @@ import {
   UNTAPPD_DEFAULT_PAGINATION,
   USER_FRIENDS,
   USER_INFO,
-  untappdEndpoint
+  untappdEndpoint,
 } from '@bottle-share-pickr/api-interface';
 
 import { Link } from 'react-router-dom';
@@ -43,7 +43,7 @@ const Home = () => {
 
     Promise.all(
       pages.map((page, i) => getFriendsList(i * UNTAPPD_DEFAULT_PAGINATION))
-    ).then(responses => {
+    ).then((responses) => {
       const friends = responses.reduce(
         (acc, cur) => [...acc, ...cur.data.response.items],
         []
@@ -80,13 +80,13 @@ const Home = () => {
   );
 };
 
-const UserInfo = props => {
+const UserInfo = (props) => {
   const { data } = props;
 
   return data ? <UserProfile data={data} /> : null;
 };
 
-const FriendsList = props => {
+const FriendsList = (props) => {
   const { data } = props;
 
   return (
@@ -99,7 +99,7 @@ const FriendsList = props => {
   );
 };
 
-const UserProfile = props => {
+const UserProfile = (props) => {
   const { data } = props;
   return (
     <UserProfileContainer>
