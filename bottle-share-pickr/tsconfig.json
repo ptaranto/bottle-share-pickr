@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@bottle-share-pickr/api-interface": ["libs/api-interface/src/index.ts"]
+      "@bottle-share-pickr/api-interface": ["libs/api-interface/src/index.ts"],
+      "@bottle-share-pickr/shared-ui": ["libs/shared-ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,4 +1,5 @@
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Footer, Header } from '@bottle-share-pickr/shared-ui';
+import { Route, Switch } from 'react-router-dom';
 
 import Home from './pages/Home';
 import Index from './pages/Index';
@@ -10,7 +11,7 @@ const StyledApp = styled.div``;
 export const App = () => {
   return (
     <StyledApp>
-      <h1>Bottle-share Pickr App</h1>
+      <Header />
 
       <Switch>
         <Route path="/home">
@@ -22,6 +23,8 @@ export const App = () => {
           <Index />
         </Route>
       </Switch>
+
+      <Footer />
     </StyledApp>
   );
 };
