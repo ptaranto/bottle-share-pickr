@@ -10,12 +10,13 @@ import {
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from '@emotion/styled';
+import useLocalStorage from '../hooks/useLocalStorage';
 import useQuery from '../hooks/useQuery';
 
 const Home = () => {
   const requestOptions = { access_token: useQuery().get('access_token') };
   const [userInfo, setUserInfo] = useState<User>(null);
-  const [friendsList, setFriendsList] = useState<Friend[]>([]);
+  const [friendsList, setFriendsList] = useLocalStorage('FRIENDS_LIST', []);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -30,8 +31,10 @@ const Home = () => {
     getUserInfo();
   }, []);
 
+  // load friends list
   useEffect(() => {
     if (!userInfo) return;
+    if (userInfo.stats.total_friends === friendsList.length) return;
 
     const numFriendsPage = Math.ceil(
       userInfo.stats.total_friends / UNTAPPD_DEFAULT_PAGINATION
@@ -45,7 +48,7 @@ const Home = () => {
       pages.map((page, i) => getFriendsList(i * UNTAPPD_DEFAULT_PAGINATION))
     ).then((responses) => {
       const friends = responses.reduce(
-        (acc, cur) => [...acc, ...cur.data.response.items],
+        (acc, cur): Friend[] => [...acc, ...cur.data.response.items],
         []
       );
       friends.sort((friend1: Friend, friend2: Friend) => {
