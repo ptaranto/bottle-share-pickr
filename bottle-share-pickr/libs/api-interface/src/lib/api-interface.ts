@@ -6,11 +6,13 @@ export const UNTAPPD_AUTHORIZE_URL = 'https://untappd.com/oauth/authorize/';
 export const UNTAPPD_ROOT_URL = 'https://api.untappd.com/v4/';
 
 export const UNTAPPD_DEFAULT_PAGINATION = 25;
+export const UNTAPPD_BEER_PAGINATION = 50;
 
 // Untappd endpoints
 export const USER_INFO = 'user/info';
 export const USER_WISHLIST = 'user/wishlist';
 export const USER_FRIENDS = 'user/friends';
+export const USER_BEERS = 'user/beers';
 export const BEER_INFO = 'beer/info';
 export const SEARCH_BEER = 'search/beer';
 
@@ -22,6 +24,8 @@ export const untappdEndpoint = (
     access_token?: string;
     compact?: boolean;
     offset?: number;
+    limit?: number;
+    sort?: string;
   }
 ) => {
   const params = Object.entries(options)

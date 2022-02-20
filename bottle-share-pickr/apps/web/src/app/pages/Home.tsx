@@ -1,7 +1,9 @@
 import { Friend, User } from '@bottle-share-pickr/api-interface';
 import React, { useEffect, useState } from 'react';
 import {
+  UNTAPPD_BEER_PAGINATION,
   UNTAPPD_DEFAULT_PAGINATION,
+  USER_BEERS,
   USER_FRIENDS,
   USER_INFO,
   untappdEndpoint,
@@ -13,11 +15,19 @@ import styled from '@emotion/styled';
 import useLocalStorage from '../hooks/useLocalStorage';
 import useQuery from '../hooks/useQuery';
 
+const FRIENDS_LIST = 'FRIENDS_LIST';
+const USER_UNIQUE_BEER_LIST = 'USER_UNIQUE_BEER_LIST';
+
 const Home = () => {
   const requestOptions = { access_token: useQuery().get('access_token') };
   const [userInfo, setUserInfo] = useState<User>(null);
-  const [friendsList, setFriendsList] = useLocalStorage('FRIENDS_LIST', []);
+  const [friendsList, setFriendsList] = useLocalStorage(FRIENDS_LIST, []);
+  const [distinctBeerList, setDistinctBeerList] = useLocalStorage(
+    USER_UNIQUE_BEER_LIST,
+    []
+  );
 
+  // load user profile
   useEffect(() => {
     const getUserInfo = async () => {
       const response = await axios.get(
@@ -61,6 +71,50 @@ const Home = () => {
       });
       setFriendsList(friends);
     });
+  }, [userInfo]);
+
+  // load unique beers
+  useEffect(() => {
+    if (!userInfo) return;
+    if (userInfo.stats.total_beers === distinctBeerList.length) return;
+
+    const numBeersPage = Math.ceil(
+      userInfo.stats.total_beers / UNTAPPD_BEER_PAGINATION
+    );
+    const pages = Array(10).fill(1);
+    // const pages = Array(numBeersPage).fill(1);
+
+    const getUserBeerList = (offset: number) =>
+      axios.get(
+        untappdEndpoint(USER_BEERS, {
+          ...requestOptions,
+          offset,
+          limit: UNTAPPD_BEER_PAGINATION,
+        })
+      );
+
+    let uniqueBeerList = [];
+    Promise.all(
+      pages.map((page, i) => getUserBeerList(i * UNTAPPD_BEER_PAGINATION))
+    )
+      .then((responses) => {
+        uniqueBeerList = responses.reduce(
+          (acc, cur) => [
+            ...acc,
+            ...cur.data.response.beers.items.reduce(
+              (acc2, cur2) => [...acc2, cur2.bid],
+              []
+            ),
+          ],
+          []
+        );
+        uniqueBeerList.sort();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log(uniqueBeerList);
+    setDistinctBeerList(uniqueBeerList);
   }, [userInfo]);
 
   return (
